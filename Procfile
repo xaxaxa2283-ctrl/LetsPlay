@@ -1,1 +1,3 @@
-web:  gunicorn DjangoProject_site.DjangoProject_site.wsgi --log-file -
+
+
+web: sh -c 'cd DjangoProject_site && gunicorn DjangoProject_site.wsgi --log-file=-'
