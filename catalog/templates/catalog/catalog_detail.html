@@ -1,0 +1,137 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block content %}
+<section class="product-page">
+
+  <!-- Название -->
+  <h1 class="product-title">{{ catalog.name }}</h1>
+
+  <div class="product-grid">
+    <!-- Фото -->
+    <div class="product-gallery">
+      {% if catalog.images.all %}
+        {% for img in catalog.images.all %}
+          <img class="main-image" src="{{ img.url }}" alt="{{ catalog.name }}">
+        {% endfor %}
+      {% else %}
+        <img class="main-image" src="{{ catalog.image.url }}" alt="{{ catalog.name }}">
+      {% endif %}
+    </div>
+
+    <!-- Информация -->
+    <div class="product-info">
+      <div class="product-price">₽ {{ catalog.coast }}</div>
+      <button class="btn primary" id="buyBtn">Купить</button>
+    </div>
+  </div>
+
+  <!-- Описание -->
+  <section class="product-description">
+    <h2>Описание</h2>
+    <p>{{ catalog.description|default:"Описание появится позже."|safe }}</p>
+  </section>
+
+  <div class="more">
+    <a href="{% url 'catalog' %}" class="btn secondary">Смотреть все приставки</a>
+  </div>
+</section>
+
+<!-- Модальное окно покупки -->
+<div id="buyModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Оформить заказ</h2>
+    <form id="buyForm">
+      {% csrf_token %}
+      <label for="name">Имя</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="phone">Телефон</label>
+      <input type="tel" id="phone" name="phone" required placeholder="+7 900 000 00 00">
+
+      <button type="submit" class="btn primary">Отправить</button>
+    </form>
+
+    <div id="thankYouMessage" style="display:none; text-align:center; margin-top:20px;">
+      Спасибо! Мы свяжемся с вами в ближайшее время.
+    </div>
+  </div>
+</div>
+
+<style>
+/* ===== Стили ===== */
+.product-page { padding: 60px 10%; color: #fff; }
+.product-title { font-size: 2rem; margin-bottom: 30px; text-align: center; }
+.product-grid { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: flex-start; }
+.product-gallery img { width: 400px; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
+.product-info { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; text-align: center; min-width: 250px; }
+.product-price { font-size: 1.8rem; margin-bottom: 20px; color: #ffb800; }
+.product-description { margin-top: 50px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+.btn { background: #136ef5; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; margin: 5px; }
+.btn.primary { background: linear-gradient(90deg, #ff5f6d, #ffc371); }
+.btn.secondary { background: rgba(255,255,255,0.2); }
+.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+.modal-content { background-color: #0b66f1; margin: 10% auto; padding: 20px 30px; border-radius: 16px; width: 90%; max-width: 400px; color: white; box-shadow: 0 0 25px rgba(0,0,0,0.4); }
+.modal-content input { width: 100%; padding: 10px; border: none; border-radius: 6px; margin-bottom: 15px; }
+.close { float: right; font-size: 1.5rem; cursor: pointer; }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("buyModal");
+  const btn = document.getElementById("buyBtn");
+  const span = document.querySelector(".close");
+  const form = document.getElementById("buyForm");
+  const thankYou = document.getElementById("thankYouMessage");
+
+  // Открытие/закрытие модалки
+  btn.onclick = () => {
+    modal.style.display = "block";
+    thankYou.style.display = "none";
+    form.style.display = "block";
+  };
+  span.onclick = () => { modal.style.display = "none"; };
+  window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+
+  // Отправка формы через AJAX
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const data = {
+      name: form.name.value,
+      phone: form.phone.value,
+      product_id: "{{ catalog.id }}"
+    };
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    try {
+      const response = await fetch("{% url 'buy_product_ajax' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (result.status === "ok") {
+        form.style.display = "none";
+        thankYou.style.display = "block";
+        form.reset();
+
+        // Автоматически закрыть модалку через 3 секунды
+        setTimeout(() => { modal.style.display = "none"; }, 3000);
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      alert("Ошибка при отправке. Попробуйте снова.");
+      console.error(error);
+    }
+  });
+});
+</script>
+{% endblock %}

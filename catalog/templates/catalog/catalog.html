@@ -1,0 +1,307 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{%  block content%}
+    <section id="Catalog" class="section catalog">
+  <h2 class="catalog-title">Каталог</h2>
+
+  <!-- Табы -->
+  <div class="tabs">
+    <button class="tab active" data-target="console">🎮 Приставки</button>
+    <button class="tab" data-target="accessory">🧩 Аксессуары</button>
+    <button class="tab" data-target="subscription">💎 Подписки</button>
+  </div>
+
+  <!-- Основной контент -->
+ <!-- <div id="tab-consoles" class="tabcontent active">
+    <div class="cards">
+
+      <div class="card">
+        <img src='{% static   "main/img/products/ps5digital.jpg"%}' alt="PS5">
+        <div class="card-body">
+          <h3 class="title">PlayStation 5 Digital</h3>
+          <p class="price">₽ 43 990</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src='{% static   "main/img/products/ps4.jpg"%}' alt="PS4">
+        <div class="card-body">
+          <h3 class="title">PlayStation 4 Slim</h3>
+          <p class="price">₽ 15 990</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src='{% static   "main/img/products/Gamepade.jpg"%}' alt="Controller">
+        <div class="card-body">
+          <h3 class="title">Контроллер DualSense</h3>
+          <p class="price">₽ 6 490</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src='{% static   "main/img/products/xbox.jpg"%}' alt="Xbox Series S">
+        <div class="card-body">
+          <h3 class="title">Xbox Series S</h3>
+          <p class="price">₽ 24 990</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src='{% static   "main/img/products/ps5bluray.jpg"%}' alt="Steam Deck">
+        <div class="card-body">
+          <h3 class="title">PlayStation 5 slim Blu-ray</h3>
+          <p class="price">₽ 49990</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src='{% static   "main/img/products/ps5pro.jpg"%}' alt="Nintendo Switch">
+        <div class="card-body">
+          <h3 class="title">PlayStation 5 PRO</h3>
+          <p class="price">₽ 71990</p>
+          <div class="actions">
+            <button class="btn">Подробнее</button>
+            <button class="btn primary">Купить</button>
+          </div>
+        </div>
+      </div>
+    </div>-->
+
+
+
+
+
+   <!-- {%  for el in catalogs %}
+    <div>
+        <img src="{{ el.image.url }}" style="width: 100px;height: 100px">
+        <h3>{{ el.name }}</h3>
+        <p>{{ el.coast }}</p>
+    </div>
+        {%   endfor %}-->
+
+
+      <div id="tab-consoles" class="tabcontent active">
+    <div class="cards">
+    {% for el in catalogs %}
+  <div class="card" data-category="{{ el.category }}">
+    <img src="{{ el.image.url }}">
+    <div class="card-body">
+      <h3 class="title">{{ el.name }}</h3>
+      <p class="price">₽ {{ el.coast }}</p>
+          <div class="actions">
+            <a href="{% url 'catalog_detail' el.id %}" class="btn" >Подробнее</a>
+            <button class="btn primary buyBtn" data-product-id="{{ el.id }}">Купить</button>
+          </div>
+        </div>
+    </div>
+
+
+
+        {%   endfor %}
+
+
+<div id="buyModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <span class="close" role="button" aria-label="Закрыть">&times;</span>
+    <h2>Оформить заказ</h2>
+    <form id="buyForm" novalidate>
+      {% csrf_token %}
+      <label for="name">Имя</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="phone">Телефон</label>
+      <input type="tel" id="phone" name="phone" required placeholder="+7 900 000 00 00">
+
+      <button type="submit" class="btn primary">Отправить</button>
+    </form>
+
+    <div id="thankYouMessage" style="display:none; text-align:center; margin-top:20px;">
+      Спасибо! Мы свяжемся с вами в ближайшее время.
+    </div>
+  </div>
+</div>
+
+
+        <style>
+/* ===== Стили ===== */
+.product-page { padding: 60px 10%; color: #fff; }
+.product-title { font-size: 2rem; margin-bottom: 30px; text-align: center; }
+.product-grid { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: flex-start; }
+.product-gallery img { width: 400px; border-radius: 16px; box-shadow: 0 0 20px rgba(0,0,0,0.3); }
+.product-info { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; text-align: center; min-width: 250px; }
+.product-price { font-size: 1.8rem; margin-bottom: 20px; color: #ffb800; }
+.product-description { margin-top: 50px; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+.btn { background: #136ef5; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; margin: 5px; }
+.btn.primary { background: linear-gradient(90deg, #ff5f6d, #ffc371); }
+.btn.secondary { background: rgba(255,255,255,0.2); }
+.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+.modal-content { background-color: #0b66f1; margin: 10% auto; padding: 20px 30px; border-radius: 16px; width: 90%; max-width: 400px; color: white; box-shadow: 0 0 25px rgba(0,0,0,0.4); }
+.modal-content input { width: 100%; padding: 10px; border: none; border-radius: 6px; margin-bottom: 15px; }
+.close { float: right; font-size: 1.5rem; cursor: pointer; }
+</style>
+
+        <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("buyModal");
+  const closeBtn = modal && modal.querySelector(".close");
+  const form = document.getElementById("buyForm");
+  const thankYou = document.getElementById("thankYouMessage");
+
+  if (!modal || !form) {
+    console.error("Modal or form not found on page.");
+    return;
+  }
+
+  // Открытие модалки при клике на любую кнопку .buyBtn
+document.querySelectorAll(".buyBtn").forEach(btn => {
+  btn.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    const pid = btn.dataset.productId;
+    form.dataset.productId = pid;
+    thankYou.style.display = "none";
+    form.style.display = "block";
+    modal.style.display = "block";
+    modal.setAttribute("aria-hidden", "false");
+  });
+});
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    // Активная кнопка
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    tab.classList.add("active");
+
+    const target = tab.dataset.target; // console / accessory / subscription
+
+    document.querySelectorAll(".card").forEach(card => {
+      card.style.display = card.dataset.category === target ? "block" : "none";
+    });
+  });
+});
+  // Закрытие
+  closeBtn && closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  });
+
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  // Обработка отправки
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const productId = form.dataset.productId;
+    if (!productId) {
+      alert("Не указан товар — попробуйте открыть модалку снова.");
+      console.error("Missing product id (form.dataset.productId is empty).");
+      return;
+    }
+
+    const name = form.name && form.name.value.trim();
+    const phone = form.phone && form.phone.value.trim();
+
+    if (!name || !phone) {
+      alert("Пожалуйста, заполните все поля.");
+      return;
+    }
+
+    // Берём csrf токен из формы (надежнее, чем document.querySelector глобально)
+    const csrfInput = form.querySelector('[name="csrfmiddlewaretoken"]');
+    const csrfToken = csrfInput ? csrfInput.value : null;
+    if (!csrfToken) {
+      console.error("CSRF token not found in form.");
+      alert("Ошибка безопасности (CSRF). Обновите страницу и попробуйте снова.");
+      return;
+    }
+
+    const payload = { name, phone, product_id: productId };
+    console.log("Sending order:", payload);
+
+    try {
+      const resp = await fetch("{% url 'buy_product_ajax' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify(payload)
+      });
+
+      // Логируем код ответа и тело
+      const text = await resp.text();
+      let json;
+      try { json = JSON.parse(text); } catch(_) { json = null; }
+
+      console.log("Response status:", resp.status, "body:", json || text);
+
+      if (!resp.ok) {
+        // если сервер вернул 4xx/5xx — покажем подробности
+        const msg = (json && json.message) || `Сервер вернул ${resp.status}`;
+        alert("Ошибка при отправке: " + msg);
+        return;
+      }
+
+      if (json && json.status === "ok") {
+        form.style.display = "none";
+        thankYou.style.display = "block";
+        form.reset();
+        setTimeout(() => {
+          modal.style.display = "none";
+          modal.setAttribute("aria-hidden", "true");
+        }, 3000);
+      } else {
+        const msg = (json && json.message) || "Что-то пошло не так";
+        alert(msg);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+      alert("Ошибка сети. Проверьте соединение или попробуйте позже.");
+    }
+  });
+});
+
+</script>
+
+
+
+
+
+
+
+
+</div>
+  </div>
+      </div>
+    </section>
+
+
+
+
+{% endblock %}
+
+
+

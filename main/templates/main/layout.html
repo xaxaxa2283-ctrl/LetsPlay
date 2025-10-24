@@ -1,0 +1,95 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LetsPlay — Магазин приставок</title>
+<meta name="description" content="LetsPlay — продажа и настройка приставок PS4 / PS5. Бесплатная настройка в магазине.">
+<link rel="icon" href="{% static 'main/img/logo.jpg' %}">
+<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+<body id="top">
+<header class="header">
+  <div class="logo" ><span class="oval-text" >LetsPlay</span></div>
+
+<button class="menu-toggle">☰</button>
+<nav class="main-nav">
+    <span><a href="/">Главная</a></span>
+    <span><a href="/about/">О нас</a></span>
+    <span><a href="{% url 'catalog' %}">Каталог</a></span>
+    <span><a href="{% url 'rewiew' %}">Отзывы</a></span>
+    <span><a href="#Contacts">Контакты</a></span>
+</nav>
+
+  <div class="nav-wrapper"><!--<div class="Whatsapp"><img src="assets/img/products/whatsapp.png"></div>-->
+  <nav class="nav" aria-label="Главное меню">
+      <a href="{% url 'home'  %}">Главная</a>
+    <a href="{% url 'about_us'  %}">О нас</a>
+    <a href="{% url 'catalog' %}">Каталог</a>
+    <a href="{% url 'rewiew' %}">Отзывы</a>
+    <a href="#Contacts">Контакты</a>
+  </nav>
+  </div>
+  <div class="spacer"></div>
+
+  <div class="phone"><a href="tel:+79221404512">+7 922 140 45 12</a></div>
+  <a class="cta" href="{% url 'catalog' %}">Выбрать приставку</a>
+</header>
+    {% block content %}
+
+    {% endblock %}
+<footer class="footer" id="Contacts">
+    <div class="logo" style="font-size: 15px" ><span class="oval-text2">LetsPlay</span></div>
+
+  <div class="links">
+    <a href="{% url 'home' %}">Главная</a><br>
+    <a href="{% url 'about_us' %}">О компании</a><br>
+    <a href="{% url 'catalog' %}">Каталог</a><br>
+    <a href="{% url 'rewiew' %}">Отзывы</a>
+  </div>
+
+  <div class="socials">
+    <a href="tel:+79221404512" class="contact-item">
+      <i class="fa-solid fa-phone"></i> +7 922 140 45 12
+    </a>
+    <a href="mailto:info@example.com" class="contact-item">
+      <i class="fa-solid fa-envelope"></i> info@example.com
+    </a>
+    <a href="https://t.me/pristavkin_bot" target="_blank" class="contact-item">
+      <i class="fa-brands fa-telegram"></i> Telegram
+
+    </a>
+      <a href="https://wa.me/79221404512" target="_blank" class="contact-item">
+          <i class="fa-brands fa-whatsapp"></i> Whatsapp
+      </a>
+  </div>
+</footer>
+
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const mainNav = document.querySelector('.main-nav');
+
+  menuToggle.addEventListener('click', function() {
+    menuToggle.classList.toggle('active'); // крестик
+    mainNav.classList.toggle('active');    // показать/скрыть меню
+  });
+
+  // Закрыть меню при клике на ссылку
+  mainNav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menuToggle.classList.remove('active');
+      mainNav.classList.remove('active');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
