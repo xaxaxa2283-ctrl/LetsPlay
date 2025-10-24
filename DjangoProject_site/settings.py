@@ -18,6 +18,22 @@ DEBUG = False
 ALLOWED_HOSTS = ["letsplay-5bm2.onrender.com", '127.0.0.1', 'localhost']
 CSRF_TRUSTED_ORIGINS = ["https://letsplay-5bm2.onrender.com"]
 
+import logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
