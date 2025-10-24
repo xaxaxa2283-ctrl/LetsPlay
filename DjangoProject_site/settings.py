@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-p*$_zq%xolbl0-32*$^aag$-6j$^7ai($fp01f7-52vh_e_*ys
 DEBUG = False
 
 ALLOWED_HOSTS = ["letsplay-5bm2.onrender.com", '127.0.0.1', 'localhost']
-
+CSRF_TRUSTED_ORIGINS = ["https://letsplay-5bm2.onrender.com"]
 
 # Application definition
 
