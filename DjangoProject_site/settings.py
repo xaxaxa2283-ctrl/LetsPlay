@@ -1,11 +1,13 @@
 
 import os
 from pathlib import Path
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+DATABASES = {
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL')),
+}
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -18,11 +20,11 @@ DEBUG = False
 ALLOWED_HOSTS = ["letsplay-5bm2.onrender.com", '127.0.0.1', 'localhost']
 CSRF_TRUSTED_ORIGINS = ["https://letsplay-5bm2.onrender.com"]
 
-CLOUDINARY_STORAGE = {
+"""CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dqap5yoe4',
     'API_KEY': '155661411978114',
     'API_SECRET': '23Bb7njM8Zxu2_yp0jSs6yB2y3Y',
-}
+}"""
 # Настройки для медиа
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_URL="cloudinary://155661411978114:23Bb7njM8Zxu2_yp0jSs6yB2y3Y@dqap5yoe4"
